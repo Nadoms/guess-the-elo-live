@@ -23,3 +23,5 @@ MANIFEST
 .venv
 env/
 venv/
+
+score.json

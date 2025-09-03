@@ -1,11 +1,14 @@
 import asyncio
 from dataclasses import dataclass
+import json
+from pathlib import Path
 import select
 import sys
 
 from connect import Twitch, YouTube
 
 
+ROOT = Path(__file__).parent
 TWITCH_CHANNEL = "nqdoms" 
 STREAMING_ON_TWITCH = True
 YOUTUBE_CHANNEL_ID = "nqdoms" 
@@ -46,6 +49,12 @@ class Guesser:
     def update_turn(self, turn):
         self.current_score = sum(self.scores[:turn + 1])
 
+    def to_dict(self):
+        return {
+            "guess": self.current_guess,
+            "score": self.current_score
+        }
+
 
 class Game:
 
@@ -80,10 +89,14 @@ class Game:
             self.guessers[message.username].update(self.turn, self.turns[self.turn].elo, guess)
 
     async def end_round(self):
+        print(f"--- Ending round {self.turn} ---")
         print(f"Current guessers:")
         for username, guesser in self.guessers.items():
             guesser.update_turn(self.turn)
             print(f"{username}: {guesser.current_score}")
+
+        self.guessers = dict(sorted(self.guessers.items(), key=lambda item: item[1].current_score))
+        self.save_game()
         self.active = False
 
     async def new_round(self):
@@ -92,8 +105,13 @@ class Game:
             print(f"Ending game")
             exit()
 
-        print(f"Starting round {self.turn}")
+        print(f"--- Starting round {self.turn} ---")
         self.active = True
+
+    def save_game(self):
+        serializable = {username: guesser.to_dict() for username, guesser in self.guessers.items()}
+        with open(ROOT / "score.json", "w") as f:
+            json.dump(serializable, f, indent=4)
 
     def parse_guess(self, message: str) -> int | None:
         if not message.isnumeric():
