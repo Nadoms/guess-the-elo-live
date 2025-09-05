@@ -65,6 +65,7 @@ class Game:
         self.turn = 0
         self.guessers: dict[str, Guesser] = {}
         self.med_guesser = Guesser.create(self.turn_count)
+        self.recent_guesses = []
         self.active = False
 
     async def game_loop(self):
@@ -83,6 +84,9 @@ class Game:
             if not guess:
                 continue
 
+            self.recent_guesses.append((message.username, guess))
+            with open(ROOT / "feed.json", "w") as f:
+                json.dump(self.recent_guesses, f, indent=4)
             if message.username not in self.guessers:
                 self.guessers[message.username] = Guesser.create(self.turn_count)
 
@@ -134,7 +138,6 @@ async def entry_point():
         service = YouTube()
         service.youtube_connect(YOUTUBE_CHANNEL_ID, YOUTUBE_STREAM_URL)
 
-    # Dummy turns for demonstration, replace with your actual turns
     turns = [Turn(username="player1", elo=1200), Turn(username="player2", elo=1500)]
     game = Game(service, turns)
     game.active = True
