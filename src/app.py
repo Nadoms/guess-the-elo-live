@@ -22,7 +22,7 @@ LB_HTML = '''
     </style>
 </head>
 <body>
-    <h2 style="text-align:center;">Leaderboard</h2>
+    <h2 style="text-align:center;">Chat Leaderboard</h2>
     <div style="display: flex; justify-content: center; align-items: flex-start; gap: 3em;">
         <table>
             <tr>

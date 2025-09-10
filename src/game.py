@@ -138,7 +138,23 @@ async def entry_point():
         service = YouTube()
         service.youtube_connect(YOUTUBE_CHANNEL_ID, YOUTUBE_STREAM_URL)
 
-    turns = [Turn(username="player1", elo=1200), Turn(username="player2", elo=1500)]
+    turns = [
+        Turn(username="sujuxi", elo=1276),
+        Turn(username="boywithcards", elo=1664),
+        Turn(username="Winstonein", elo=1659),
+        Turn(username="EERRMM", elo=1404),
+        Turn(username="JER3L", elo=904),
+        Turn(username="R1qo", elo=1337),
+        Turn(username="edcr", elo=2138),
+        Turn(username="Myhardblazerod", elo=1255),
+        Turn(username="venfy", elo=1712),
+        Turn(username="FlaxyB", elo=1356),
+        Turn(username="BoomBlast11", elo=1068),
+        Turn(username="Finnitzko", elo=1571),
+        Turn(username="MrJeck", elo=1301),
+        Turn(username="BlazeMind", elo=1943),
+        Turn(username="WGLJaco", elo=1355),
+    ]
     game = Game(service, turns)
     game.active = True
 
